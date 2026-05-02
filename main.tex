@@ -1,6 +1,6 @@
-% DAFN25 - Robotics - Lecture 3
+% DAFN26 - Robotics - Lecture 6
 % Roberto Masocco <roberto.masocco@uniroma2.it>
-% May 12, 2025
+% May 2, 2026
 
 \documentclass[aspectratio=169]{beamer}
 
@@ -16,7 +16,7 @@
   longinstitute={Tor Vergata University of Rome},
   department={Department of Civil Engineering and Computer Science Engineering},
   researchgroup={},
-  date={May 12, 2025}
+  date={May 7, 2026}
 ]{utvengbeamer}
 
 % Code listings settings
@@ -25,7 +25,7 @@
 \definecolor{codered}{rgb}{1 0 0}
 \definecolor{codeocher}{rgb}{0.8 0.47 0.13}
 \usepackage{listings}
-\lstdefinestyle{beamer}{
+\lstdefinestyle{codebeamer}{
   basicstyle=\ttfamily\small,
   commentstyle=\color{codegreen},
   breakatwhitespace=false,
@@ -42,7 +42,7 @@
   stringstyle=\color{codeocher},
   tabsize=2
 }
-\lstset{style=beamer}
+\lstset{style=codebeamer}
 \lstdefinelanguage{ros2msg}{
   alsoletter={[, ], _, /},
   morecomment=[l][\color{codegreen}]{\#},
@@ -74,10 +74,11 @@
 
 % --- Exercises ---
 \begin{frame}{Exercises}
+  \justifying
 	\begin{itemize}
     \item Run the service client and server examples, and try to call the service from the command line.
 		\item Add a timer to the subscriber in the \texttt{topic\_pubsub\_cpp} package to periodically toggle the ROS 2 subscriber on and off; how would you do that?\\
-		      (Solution: \href{https://github.com/IntelligentSystemsLabUTV/ros2-examples/blob/humble/src/cpp/topic_pubsub_cpp/src/resetting_sub.cpp}{\color{blue}\underline{\texttt{resetting\_sub}}} example.)
+		      (Solution: \href{https://github.com/IntelligentSystemsLabUTV/ros2-examples/blob/jazzy/src/cpp/topic_pubsub_cpp/src/resetting_sub.cpp}{\color{blue}\underline{\texttt{resetting\_sub}}} example.)
 		\item Create two new packages: one for server and client nodes, and one for a custom service definition named \texttt{CapString.srv}; the server should take a string as input and return two strings: the same string fully capitalized, and the number of characters in the string.\\
 		      (Before trying this: read \href{https://github.com/IntelligentSystemsLabUTV/ros2-examples/blob/jazzy/interfaces.md}{\color{blue}\underline{\texttt{interfaces.md}}}.)
 	\end{itemize}
