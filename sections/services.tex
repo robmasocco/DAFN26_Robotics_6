@@ -44,8 +44,55 @@
   \end{block}
   \begin{block}{Clients}
     \justifying
-    As per the previous dynamics, one has to \textbf{code each step} of the client side into their application using appropriate \textbf{ROS 2 APIs}. \textbf{The client object is used to send requests}, while \textbf{responses are handled as \texttt{future} objects\footnote{\href{https://en.cppreference.com/w/cpp/thread/future}{\color{blue}\underline{\texttt{std::future} - C++ Reference}}}}.
+    As per the previous dynamics, one has to \textbf{code each step} of the client side into their application using appropriate \textbf{ROS 2 APIs}. \textbf{The client object is used to send requests}, while \textbf{responses are handled as \texttt{std::future<T>} objects\footnote{\href{https://en.cppreference.com/w/cpp/thread/future}{\color{blue}\underline{\texttt{std::future<T>} - C++ Reference}}}}.
   \end{block}
+\end{frame}
+\begin{frame}{ROS 2 services}{Coding hints for futures}
+  \justifying
+  When handling \textbg{future objects}, \emph{e.g.}, when coding a \textbg{service client} waiting for a \textbg{response}, you may do one of the following:
+  \begin{itemize}
+    \item \textbg{go on with your code and check} if the future holds a value;
+      \begin{itemize}
+        \item \texttt{future.valid()} method;
+      \end{itemize}
+    \item \textbg{block waiting} for the future to get a value;
+      \begin{itemize}
+        \item \texttt{future.get()} method;
+      \end{itemize}
+    \item \textbg{wait for some time} for the future to get a value;
+      \begin{itemize}
+        \item \texttt{future.wait\_for()} method (recall the one for condition variables);
+        \item \texttt{rclcpp::spin\_until\_future\_complete(node, future)} method.
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+\begin{frame}{ROS 2 services}{Coding hints for futures}
+  \justifying
+  \begin{itemize}
+    \item \texttt{spin\_until\_future\_complete(node, future)} (a method of the \texttt{Executor} classes) \textbg{spins an executor with the node until the future gets a value}.
+      \begin{itemize}
+        \item \textbg{Other ROS events keep being processed while waiting for the response to arrive.}
+        \item \textbg{Use this only if no other thread is spinning an executor with the node.}
+      \end{itemize}
+    \item \texttt{future.wait\_for()} \textbg{blocks the calling thread} until either the future gets a \textbg{value} or the \textbg{timeout} occurs.
+      \begin{itemize}
+        \item \textbg{Use this only when another thread is spinning an executor with the node.}
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+\begin{frame}{ROS 2 services}{Coding hints for futures}
+  \begin{alertblock}{Deadlocks!}
+    \justifying
+    \textbr{A service response is a ROS event that must be handled, \emph{i.e.}, an executor must be spinning to get it.}\\
+    \medskip
+    \textbr{No executor running or the one available being blocked} (\emph{e.g.}, if waiting, blocking or not, for a service response inside a callback executed by a \texttt{SingleThreadedExecutor}) results in a \textbr{deadlock}.\\
+    \medskip
+    When waiting for futures, pay attention to either
+    \begin{itemize}
+      \item do so from \textbr{dedicated threads and not callbacks}, or
+      \item use a properly configured \texttt{MultiThreadedExecutor}.
+    \end{itemize}
+  \end{alertblock}
 \end{frame}
 
 % --- Interface files - Services ---
